@@ -1,0 +1,61 @@
+CCS PCM C Compiler, Version 4.104, 5967               20-abr.-20 10:36
+
+               Filename: C:\Users\Ponce\Downloads\practica 8 micros\ejercicio_3.lst
+
+               ROM used: 29 words (0%)
+                         Largest free fragment is 2048
+               RAM used: 6 (2%) at main() level
+                         6 (2%) worst case
+               Stack:    1 worst case (0 in main + 1 for interrupts)
+
+*
+0000:  MOVLW  00
+0001:  MOVWF  0A
+0002:  GOTO   004
+0003:  NOP
+.................... #include <16F877A.h> 
+.................... //////// Standard Header file for the PIC16F877A device //////////////// 
+.................... #device PIC16F877A 
+.................... #list 
+....................  
+.................... #fuses HS, NOWDT, NOPROTECT 
+.................... #use delay(clock = 20000000) 
+.................... #org 0x1F00, 0x1FFF void loader16F877A(void){} 
+*
+1F00:  RETURN
+....................  
+.................... int var1; 
+.................... void main(){ 
+*
+0004:  CLRF   04
+0005:  BCF    03.7
+0006:  MOVLW  1F
+0007:  ANDWF  03,F
+0008:  BSF    03.5
+0009:  BSF    1F.0
+000A:  BSF    1F.1
+000B:  BSF    1F.2
+000C:  BCF    1F.3
+000D:  MOVLW  07
+000E:  MOVWF  1C
+.................... 	while(1){ 
+.................... 		var1=input_a(); 
+000F:  MOVLW  FF
+0010:  MOVWF  05
+0011:  BCF    03.5
+0012:  MOVF   05,W
+0013:  MOVWF  20
+.................... 		output_b(var1); 
+0014:  BSF    03.5
+0015:  CLRF   06
+0016:  BCF    03.5
+0017:  MOVF   20,W
+0018:  MOVWF  06
+.................... 	}//while 
+0019:  BSF    03.5
+001A:  GOTO   00F
+.................... }//main 
+001B:  SLEEP
+
+Configuration Fuses:
+   Word  1: 3F72   HS NOWDT PUT NODEBUG NOPROTECT BROWNOUT NOLVP NOCPD NOWRT

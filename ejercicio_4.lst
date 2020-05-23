@@ -1,0 +1,119 @@
+CCS PCM C Compiler, Version 4.104, 5967               20-abr.-20 10:37
+
+               Filename: C:\Users\Ponce\Downloads\practica 8 micros\ejercicio_4.lst
+
+               ROM used: 182 words (2%)
+                         Largest free fragment is 2048
+               RAM used: 6 (2%) at main() level
+                         8 (2%) worst case
+               Stack:    2 worst case (1 in main + 1 for interrupts)
+
+*
+0000:  MOVLW  00
+0001:  MOVWF  0A
+0002:  GOTO   07B
+0003:  NOP
+.................... #include <16F877A.h> 
+.................... //////// Standard Header file for the PIC16F877A device //////////////// 
+.................... #device PIC16F877A 
+.................... #list 
+....................  
+.................... #fuses HS, NOWDT, NOPROTECT 
+.................... #use delay(clock = 20000000) 
+0067:  MOVLW  22
+0068:  MOVWF  04
+0069:  BCF    03.7
+006A:  MOVF   00,W
+006B:  BTFSC  03.2
+006C:  GOTO   07A
+006D:  MOVLW  06
+006E:  MOVWF  78
+006F:  CLRF   77
+0070:  DECFSZ 77,F
+0071:  GOTO   070
+0072:  DECFSZ 78,F
+0073:  GOTO   06F
+0074:  MOVLW  7B
+0075:  MOVWF  77
+0076:  DECFSZ 77,F
+0077:  GOTO   076
+0078:  DECFSZ 00,F
+0079:  GOTO   06D
+007A:  RETURN
+.................... #use rs232(baud=56000, xmit=PIN_C6, rcv=PIN_C7) 
+.................... #org 0x1F00, 0x1FFF void loader16F877A(void){} 
+*
+1F00:  RETURN
+....................  
+.................... void main(){ 
+*
+007B:  CLRF   04
+007C:  BCF    03.7
+007D:  MOVLW  1F
+007E:  ANDWF  03,F
+007F:  MOVLW  15
+0080:  BSF    03.5
+0081:  MOVWF  19
+0082:  MOVLW  A6
+0083:  MOVWF  18
+0084:  MOVLW  90
+0085:  BCF    03.5
+0086:  MOVWF  18
+0087:  BSF    03.5
+0088:  BSF    1F.0
+0089:  BSF    1F.1
+008A:  BSF    1F.2
+008B:  BCF    1F.3
+008C:  MOVLW  07
+008D:  MOVWF  1C
+....................    while(1){ 
+....................       output_b(0xFF); 
+008E:  CLRF   06
+008F:  MOVLW  FF
+0090:  BCF    03.5
+0091:  MOVWF  06
+....................      printf("Todos los bits encendidos\n\r"); 
+0092:  MOVLW  04
+0093:  BSF    03.6
+0094:  MOVWF  0D
+0095:  MOVLW  00
+0096:  MOVWF  0F
+0097:  BCF    03.6
+0098:  CALL   01F
+....................      delay_ms(2000); 
+0099:  MOVLW  08
+009A:  MOVWF  21
+009B:  MOVLW  FA
+009C:  MOVWF  22
+009D:  CALL   067
+009E:  DECFSZ 21,F
+009F:  GOTO   09B
+....................      output_b(0x00); 
+00A0:  BSF    03.5
+00A1:  CLRF   06
+00A2:  BCF    03.5
+00A3:  CLRF   06
+....................      printf("Todos los leds apagados\n\r"); 
+00A4:  MOVLW  12
+00A5:  BSF    03.6
+00A6:  MOVWF  0D
+00A7:  MOVLW  00
+00A8:  MOVWF  0F
+00A9:  BCF    03.6
+00AA:  CALL   01F
+....................      delay_ms(2000); 
+00AB:  MOVLW  08
+00AC:  MOVWF  21
+00AD:  MOVLW  FA
+00AE:  MOVWF  22
+00AF:  CALL   067
+00B0:  DECFSZ 21,F
+00B1:  GOTO   0AD
+....................    }//while 
+00B2:  BSF    03.5
+00B3:  GOTO   08E
+.................... }//main 
+00B4:  SLEEP
+
+Configuration Fuses:
+   Word  1: 3F72   HS NOWDT PUT NODEBUG NOPROTECT BROWNOUT NOLVP NOCPD NOWRT

@@ -1,0 +1,275 @@
+CCS PCM C Compiler, Version 4.104, 5967               20-abr.-20 10:38
+
+               Filename: C:\Users\Ponce\Downloads\practica 8 micros\ejercicio_5.lst
+
+               ROM used: 182 words (2%)
+                         Largest free fragment is 2048
+               RAM used: 5 (1%) at main() level
+                         8 (2%) worst case
+               Stack:    4 worst case (3 in main + 1 for interrupts)
+
+*
+0000:  MOVLW  00
+0001:  MOVWF  0A
+0002:  GOTO   07B
+0003:  NOP
+.................... #include <16F877A.h> 
+.................... //////// Standard Header file for the PIC16F877A device //////////////// 
+.................... #device PIC16F877A 
+.................... #list 
+....................  
+.................... #fuses HS, NOWDT, NOPROTECT 
+.................... #use delay(clock = 20000000) 
+0004:  MOVLW  23
+0005:  MOVWF  04
+0006:  BCF    03.7
+0007:  MOVF   00,W
+0008:  BTFSC  03.2
+0009:  GOTO   017
+000A:  MOVLW  06
+000B:  MOVWF  78
+000C:  CLRF   77
+000D:  DECFSZ 77,F
+000E:  GOTO   00D
+000F:  DECFSZ 78,F
+0010:  GOTO   00C
+0011:  MOVLW  7B
+0012:  MOVWF  77
+0013:  DECFSZ 77,F
+0014:  GOTO   013
+0015:  DECFSZ 00,F
+0016:  GOTO   00A
+0017:  RETURN
+.................... #use rs232(baud=56000, xmit=PIN_C6, rcv=PIN_C7) 
+.................... #org 0x1F00, 0x1FFF void loader16F877A(void){} 
+*
+1F00:  RETURN
+....................  
+.................... #define retardo 250 
+....................  
+.................... void apagados(){ 
+....................    output_b(0x00); 
+*
+0018:  BSF    03.5
+0019:  CLRF   06
+001A:  BCF    03.5
+001B:  CLRF   06
+....................    delay_ms(retardo); 
+001C:  MOVLW  FA
+001D:  MOVWF  23
+001E:  CALL   004
+.................... } 
+001F:  RETURN
+....................  
+.................... void encendidos(){ 
+....................    output_b(255); 
+0020:  BSF    03.5
+0021:  CLRF   06
+0022:  MOVLW  FF
+0023:  BCF    03.5
+0024:  MOVWF  06
+....................    delay_ms(retardo); 
+0025:  MOVLW  FA
+0026:  MOVWF  23
+0027:  CALL   004
+....................     
+.................... } 
+0028:  BCF    0A.3
+0029:  BCF    0A.4
+002A:  GOTO   0B3 (RETURN)
+....................  
+.................... void corrDer(){ 
+002B:  MOVLW  80
+002C:  MOVWF  21
+....................    int data=128,i; 
+....................    for(i=0;i<=7;i++){ 
+002D:  CLRF   22
+002E:  MOVF   22,W
+002F:  SUBLW  07
+0030:  BTFSS  03.0
+0031:  GOTO   03E
+....................       output_b(data); 
+0032:  BSF    03.5
+0033:  CLRF   06
+0034:  BCF    03.5
+0035:  MOVF   21,W
+0036:  MOVWF  06
+....................       delay_ms(retardo); 
+0037:  MOVLW  FA
+0038:  MOVWF  23
+0039:  CALL   004
+....................       data=data/2; 
+003A:  BCF    03.0
+003B:  RRF    21,F
+....................    } 
+003C:  INCF   22,F
+003D:  GOTO   02E
+....................    output_b(0); 
+003E:  BSF    03.5
+003F:  CLRF   06
+0040:  BCF    03.5
+0041:  CLRF   06
+.................... } 
+0042:  RETURN
+....................  
+.................... void corrIzq(){ 
+0043:  MOVLW  02
+0044:  MOVWF  21
+....................    int data=2,i; 
+....................    output_b(1); 
+0045:  BSF    03.5
+0046:  CLRF   06
+0047:  MOVLW  01
+0048:  BCF    03.5
+0049:  MOVWF  06
+....................    delay_ms(retardo); 
+004A:  MOVLW  FA
+004B:  MOVWF  23
+004C:  CALL   004
+....................    for(i=1;i<=7;i++){ 
+004D:  MOVLW  01
+004E:  MOVWF  22
+004F:  MOVF   22,W
+0050:  SUBLW  07
+0051:  BTFSS  03.0
+0052:  GOTO   05F
+....................       output_b(data); 
+0053:  BSF    03.5
+0054:  CLRF   06
+0055:  BCF    03.5
+0056:  MOVF   21,W
+0057:  MOVWF  06
+....................       data=data*2; 
+0058:  BCF    03.0
+0059:  RLF    21,F
+....................       delay_ms(retardo); 
+005A:  MOVLW  FA
+005B:  MOVWF  23
+005C:  CALL   004
+....................    } 
+005D:  INCF   22,F
+005E:  GOTO   04F
+....................    output_b(0); 
+005F:  BSF    03.5
+0060:  CLRF   06
+0061:  BCF    03.5
+0062:  CLRF   06
+.................... } 
+0063:  RETURN
+....................  
+.................... void corrDerIzq(){ 
+....................    corrDer(); 
+0064:  CALL   02B
+....................    corrIzq(); 
+0065:  CALL   043
+.................... } 
+0066:  BCF    0A.3
+0067:  BCF    0A.4
+0068:  GOTO   0B3 (RETURN)
+....................  
+.................... void apagEnc(){ 
+....................    output_b(255); 
+0069:  BSF    03.5
+006A:  CLRF   06
+006B:  MOVLW  FF
+006C:  BCF    03.5
+006D:  MOVWF  06
+....................    delay_ms(retardo); 
+006E:  MOVLW  FA
+006F:  MOVWF  23
+0070:  CALL   004
+....................    output_b(0); 
+0071:  BSF    03.5
+0072:  CLRF   06
+0073:  BCF    03.5
+0074:  CLRF   06
+....................    delay_ms(retardo); 
+0075:  MOVLW  FA
+0076:  MOVWF  23
+0077:  CALL   004
+.................... } 
+0078:  BCF    0A.3
+0079:  BCF    0A.4
+007A:  GOTO   0B3 (RETURN)
+....................  
+.................... void main(){ 
+007B:  CLRF   04
+007C:  BCF    03.7
+007D:  MOVLW  1F
+007E:  ANDWF  03,F
+007F:  MOVLW  15
+0080:  BSF    03.5
+0081:  MOVWF  19
+0082:  MOVLW  A6
+0083:  MOVWF  18
+0084:  MOVLW  90
+0085:  BCF    03.5
+0086:  MOVWF  18
+0087:  BSF    03.5
+0088:  BSF    1F.0
+0089:  BSF    1F.1
+008A:  BSF    1F.2
+008B:  BCF    1F.3
+008C:  MOVLW  07
+008D:  MOVWF  1C
+....................    while(TRUE){ 
+....................       switch(getch()){ 
+008E:  BCF    03.5
+008F:  BTFSS  0C.5
+0090:  GOTO   08F
+0091:  MOVF   1A,W
+0092:  XORLW  30
+0093:  BTFSC  03.2
+0094:  GOTO   0A5
+0095:  XORLW  01
+0096:  BTFSC  03.2
+0097:  GOTO   0A7
+0098:  XORLW  03
+0099:  BTFSC  03.2
+009A:  GOTO   0A9
+009B:  XORLW  01
+009C:  BTFSC  03.2
+009D:  GOTO   0AB
+009E:  XORLW  07
+009F:  BTFSC  03.2
+00A0:  GOTO   0AD
+00A1:  XORLW  01
+00A2:  BTFSC  03.2
+00A3:  GOTO   0AF
+00A4:  GOTO   0B1
+....................          case '0': apagados();  
+00A5:  CALL   018
+....................             break; 
+00A6:  GOTO   0B3
+....................          case '1': encendidos();  
+00A7:  GOTO   020
+....................             break; 
+00A8:  GOTO   0B3
+....................          case '2': corrDer();  
+00A9:  CALL   02B
+....................             break; 
+00AA:  GOTO   0B3
+....................          case '3': corrIzq();  
+00AB:  CALL   043
+....................             break; 
+00AC:  GOTO   0B3
+....................          case '4': corrDerIzq();  
+00AD:  GOTO   064
+....................             break; 
+00AE:  GOTO   0B3
+....................          case '5': apagEnc();  
+00AF:  GOTO   069
+....................             break; 
+00B0:  GOTO   0B3
+....................          default: apagados();  
+00B1:  CALL   018
+....................             break; 
+00B2:  GOTO   0B3
+....................       }//switch 
+....................    }//while 
+00B3:  GOTO   08F
+.................... }//main 
+00B4:  SLEEP
+
+Configuration Fuses:
+   Word  1: 3F72   HS NOWDT PUT NODEBUG NOPROTECT BROWNOUT NOLVP NOCPD NOWRT
